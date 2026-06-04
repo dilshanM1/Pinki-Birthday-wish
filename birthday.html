@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Highly Rigged Relationship Quiz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&family=Abhaya+Libre:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-start: #ffdde1;
+            --bg-end: #ee9ca7;
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --accent-color: #d63384;
+            --text-color: #2b2b2b;
+            --btn-bg: #e63946;
+            --btn-hover: #ff4d6d;
+        }
+
+        * { 
+            box-sizing: border-box; 
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: var(--text-color);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 2.5rem 2rem;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(214, 51, 132, 0.15);
+            text-align: center;
+            width: 92%;
+            max-width: 500px;
+            margin: 20px auto;
+            position: relative;
+            z-index: 10;
+            max-height: 92vh;
+            overflow-y: auto;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .container.wide-layout {
+            max-width: 650px;
+        }
+
+        h2 { 
+            font-family: 'Abhaya Libre', serif; 
+            color: var(--accent-color); 
+            font-size: calc(1.5rem + 0.4vw);
+            margin-top: 0;
+            line-height: 1.3;
+        }
+        
+        p { 
+            font-size: calc(0.9rem + 0.1vw); 
+            line-height: 1.6; 
+            color: #444; 
+        }
+
+        input {
+            width: 100%;
+            max-width: 320px;
+            padding: 14px;
+            margin: 20px 0;
+            border: 2px solid #ffccd5;
+            border-radius: 12px;
+            outline: none;
+            text-align: center;
+            font-size: 1.2rem;
+            letter-spacing: 3px;
+        }
+
+        button.primary-btn {
+            background: linear-gradient(135deg, var(--btn-bg), var(--btn-hover));
+            color: white;
+            border: none;
+            padding: 14px 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.3);
+            transition: transform 0.2s;
+        }
+
+        button.primary-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .hidden { display: none !important; }
+
+        .emoji-particle {
+            position: absolute;
+            font-size: calc(1.2rem + 0.5vw);
+            animation: floatUp 6s linear infinite;
+            z-index: 1;
+            user-select: none;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(105vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
+        }
+
+        .quiz-option {
+            display: block;
+            width: 100%;
+            margin: 12px 0;
+            padding: 15px;
+            background: #fff;
+            border: 2px solid #f8f9fa;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+            font-size: calc(0.9rem + 0.1vw);
+            text-align: left;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover { 
+            background: #fff0f3; 
+            border-color: var(--bg-end);
+            transform: translateX(3px);
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .modal-box {
+            background: white;
+            padding: 25px 20px;
+            border-radius: 18px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+        }
+
+        /* 1:1 Responsive Gift System Grid */
+        .gift-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        @media (min-width: 480px) {
+            .gift-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        .gift-card {
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 8px;
+            cursor: pointer;
+            background: #fff;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+        .gift-card:hover {  
+            transform: scale(1.04); 
+            border-color: var(--accent-color);
+        }
+        
+        /* Rigid 1:1 Constraints */
+        .gift-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            border-radius: 8px;
+            background: linear-gradient(to bottom, #ffffff, #fff2f4);
+        }
+        .gift-label { 
+            font-size: 0.8rem; 
+            margin-top: 6px; 
+            font-weight: 500; 
+        }
+        
+        .gift-card.special-tenth {
+            grid-column: span 2;
+            background: #fff0f3;
+            border: 2px dashed var(--accent-color);
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (min-width: 480px) {
+            .gift-card.special-tenth {
+                grid-column: span 3;
+            }
+        }
+
+        #kiss-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 221, 225, 0.95);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: calc(5rem + 5vw);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        .animate-kiss {
+            animation: kissHeart 1.5s ease-in-out forwards;
+        }
+        @keyframes kissHeart {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+
+        .final-msg { 
+            font-family: 'Abhaya Libre', serif; 
+            font-size: calc(1.15rem + 0.15vw); 
+            line-height: 1.7;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        /* Post-Quiz Timeline Rewards Component Styles */
+        .reward-timeline-container {
+            margin-top: 35px;
+            padding-top: 25px;
+            border-top: 2px dashed #f2bec7;
+        }
+        .reward-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .reward-card {
+            background: #ffffff;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 6px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .reward-card:hover {
+            transform: translateY(-3px);
+        }
+        .reward-card.locked {
+            background: #f7f7f9;
+        }
+        .reward-img {
+            width: 100%;
+            aspect-ratio: 1 / 1;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        .reward-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 6px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="emoji-container"></div>
+
+    <div id="custom-alert" class="modal-overlay hidden">
+        <div class="modal-box">
+            <p style="font-weight: 600; font-size: 1.1rem;" id="alert-text">මරිසි එපා හරි එක ඔබන්න මේක හදලා තියෙන්නෙ මට වාසියට 😑</p>
+            <button class="primary-btn" style="padding: 10px 30px; margin-top: 15px;" onclick="closeAlert()">ඕකේ 🙄</button>
+        </div>
+    </div>
+
+    <div id="kiss-overlay">😘❤️</div>
+
+    <div id="password-screen" class="container">
+        <h2>🔒 Private Access</h2>
+        <p>ඉදිරියට යාමට අපේ "රහස් කේතය" (Password) ඇතුලත් කරන්න!</p>
+        <input type="password" id="passwordInput" placeholder="•••••••" inputmode="numeric">
+        <br>
+        <button class="primary-btn" onclick="checkPassword()">Unlock</button>
+        <p id="error" style="color: #e63946; font-size: 0.85rem; margin-top: 15px;" class="hidden">වැරදි මුරපදයක්! ආයෙත් ගහන්න 😂</p>
+    </div>
+
+    <div id="quiz-screen" class="container">
+        <h2 id="quiz-level-title" style="font-size: 1.1rem; opacity: 0.6; font-family:'Poppins'; font-weight:600;">LEVEL 01</h2>
+        <p id="question-text" style="font-size: 1.2rem; font-weight: 500; margin-bottom: 25px;"></p>
+        <div id="options-container"></div>
+    </div>
+
+    <div id="gift-screen" class="container wide-layout hidden">
+        <h2>ඉතින් අද ඔයාගේ උපන්දිනේනේ ඔයාට මොනවද ඕන තෑග්ග? 🎁</h2>
+        <p style="font-size: 0.9rem; opacity: 0.7;">ඔයාට කැමති එකක් තෝරගන්න බලන්න...</p>
+        
+        <div class="gift-grid">
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="phoneGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#434343"/>
+                            <stop offset="100%" stop-color="#000000"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="28" y="12" width="44" height="76" rx="9" fill="url(#phoneGrad)" stroke="#8e8e93" stroke-width="1.5"/>
+                    <rect x="31" y="15" width="38" height="70" rx="6" fill="#1c1c1e"/>
+                    <path d="M31,45 C45,35 55,65 69,50" stroke="#ff4d6d" stroke-width="1" fill="none" opacity="0.6"/>
+                    <rect x="42" y="18" width="16" height="3.5" rx="1.7" fill="#000"/>
+                    <circle cx="42" cy="30" r="4.5" fill="#2c2c2e" stroke="#444" stroke-width="0.5"/>
+                    <circle cx="42" cy="30" r="1.5" fill="#050505"/>
+                    <circle cx="52" cy="35" r="4.5" fill="#2c2c2e" stroke="#444" stroke-width="0.5"/>
+                    <circle cx="52" cy="35" r="1.5" fill="#050505"/>
+                    <circle cx="43" cy="40" r="4.5" fill="#2c2c2e" stroke="#444" stroke-width="0.5"/>
+                    <circle cx="43" cy="40" r="1.5" fill="#050505"/>
+                </svg>
+                <div class="gift-label">iPhone 17 Pro</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ffee75"/>
+                            <stop offset="50%" stop-color="#d4af37"/>
+                            <stop offset="100%" stop-color="#aa7c11"/>
+                        </linearGradient>
+                    </defs>
+                    <circle cx="50" cy="56" r="23" stroke="url(#goldGrad)" stroke-width="4.5" fill="none"/>
+                    <path d="M44,35 L56,35 L53,40 L47,40 Z" fill="#aa7c11"/>
+                    <polygon points="50,18 64,32 57,35 43,35 36,32" fill="#e3f7ff"/>
+                    <polygon points="50,18 50,35 43,35" fill="#b9f2ff"/>
+                    <polygon points="50,18 57,35 50,35" fill="#ffffff"/>
+                    <path d="M66,16 L68,21 L73,21 L69,24 L71,29 L66,26 L61,29 L63,24 L59,21 L64,21 Z" fill="#ffd700" transform="scale(0.4) translate(65, 15)"/>
+                </svg>
+                <div class="gift-label">Gold Ring</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M36,44 C36,22 64,22 64,44" stroke="#d4af37" stroke-width="3" fill="none"/>
+                    <path d="M22,44 L78,44 C81,44 82,46 80,50 L72,82 C71,85 69,86 66,86 L34,86 C31,86 29,85 28,82 L20,50 C18,46 19,44 22,44 Z" fill="#3d2314"/>
+                    <rect x="42" y="44" width="16" height="42" fill="#1b4d3e"/>
+                    <rect x="47" y="44" width="6" height="42" fill="#8b0000"/>
+                    <circle cx="47" cy="65" r="4.5" stroke="#d4af37" stroke-width="2" fill="none"/>
+                    <circle cx="53" cy="65" r="4.5" stroke="#d4af37" stroke-width="2" fill="none"/>
+                </svg>
+                <div class="gift-label">Gucci Bag</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="silverGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#8e8e93"/>
+                            <stop offset="50%" stop-color="#e5e5ea"/>
+                            <stop offset="100%" stop-color="#aeaeac"/>
+                        </linearGradient>
+                    </defs>
+                    <rect x="41" y="12" width="18" height="76" fill="url(#silverGrad)" rx="3"/>
+                    <circle cx="50" cy="50" r="24" fill="url(#silverGrad)" stroke="#7a7a7a" stroke-width="0.5"/>
+                    <circle cx="50" cy="50" r="20" fill="#0f1d3a"/>
+                    <circle cx="50" cy="34" r="1.2" fill="#fff"/>
+                    <circle cx="50" cy="66" r="1.2" fill="#fff"/>
+                    <circle cx="34" cy="50" r="1.2" fill="#fff"/>
+                    <circle cx="66" cy="50" r="1.2" fill="#fff"/>
+                    <line x1="50" y1="50" x2="50" y2="37" stroke="#d4af37" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="50" y1="50" x2="61" y2="54" stroke="#d4af37" stroke-width="1.5" stroke-linecap="round"/>
+                    <circle cx="50" cy="50" r="2" fill="#fff"/>
+                </svg>
+                <div class="gift-label">Luxury Watch</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="40" fill="#f0f7ff" opacity="0.5"/>
+                    <path d="M28,86 L41,52 C43,48 45,40 45,36 L43,36 L45,30 L48,30 L49,12 L51,12 L52,30 L55,30 L57,36 L55,36 C55,40 57,48 59,52 L72,86 Z" fill="#46413c"/>
+                    <rect x="34" y="66" width="32" height="3" fill="#2d2926"/>
+                    <rect x="42" y="44" width="16" height="2.5" fill="#2d2926"/>
+                    <path d="M37,86 C40,74 60,74 63,86" fill="#fff2f4"/>
+                    <path d="M20,40 C22,35 28,35 30,38 C32,35 38,36 38,40 Z" fill="#ffffff" opacity="0.9"/>
+                </svg>
+                <div class="gift-label">Paris Tour</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="46" y="16" width="8" height="12" fill="#d4af37"/>
+                    <rect x="44" y="24" width="12" height="4" fill="#b59422"/>
+                    <rect x="26" y="28" width="48" height="56" rx="8" fill="#fff0f2" stroke="#e0a3b3" stroke-width="1.5"/>
+                    <rect x="31" y="34" width="38" height="44" rx="4" fill="#ffccd5" opacity="0.7"/>
+                    <rect x="35" y="46" width="30" height="20" fill="#ffffff" stroke="#2b2b2b" stroke-width="0.5" rx="1"/>
+                    <text x="50" y="55" font-family="'Poppins', sans-serif" font-size="6.5" font-weight="700" text-anchor="middle" fill="#000" letter-spacing="0.5">DIOR</text>
+                    <text x="50" y="62" font-family="sans-serif" font-size="3" text-anchor="middle" fill="#666">PARIS</text>
+                    <path d="M42,28 C46,25 54,25 58,28 C54,30 46,30 42,28 Z" fill="#ffffff" stroke="#ccc" stroke-width="0.5"/>
+                </svg>
+                <div class="gift-label">Dior Perfume</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="50" cy="74" rx="38" ry="6" fill="#e0bfcf" opacity="0.6"/>
+                    <path d="M12,64 C10,60 14,54 22,52 L38,44 C44,42 58,42 66,45 L86,52 C90,54 91,58 88,64 L84,68 L16,68 Z" fill="#e63946"/>
+                    <path d="M38,45 L44,35 C48,33 58,33 62,36 L70,46 C60,44 48,44 38,45 Z" fill="#202024"/>
+                    <circle cx="26" cy="64" r="9" fill="#1c1c1e"/>
+                    <circle cx="26" cy="64" r="5" fill="#95a5a6"/>
+                    <circle cx="26" cy="64" r="2" fill="#555"/>
+                    <circle cx="72" cy="64" r="9" fill="#1c1c1e"/>
+                    <circle cx="72" cy="64" r="5" fill="#95a5a6"/>
+                    <circle cx="72" cy="64" r="2" fill="#555"/>
+                    <polygon points="86,58 98,56 96,64 85,61" fill="#fff3cd" opacity="0.5"/>
+                </svg>
+                <div class="gift-label">Sports Car</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <polygon points="50,15 74,38 62,38 50,24" fill="#eaf9ff"/>
+                    <polygon points="50,15 26,38 38,38 50,24" fill="#aee2ff"/>
+                    <polygon points="50,15 50,24 38,38" fill="#cbeeff"/>
+                    <polygon points="50,15 62,38 50,24" fill="#ffffff"/>
+                    <polygon points="26,38 38,38 20,38" fill="#7cc7ff"/>
+                    <polygon points="74,38 62,38 80,38" fill="#9cd5ff"/>
+                    <polygon points="26,38 38,38 50,88" fill="#4faeff"/>
+                    <polygon points="74,38 62,38 50,88" fill="#7cd7ff"/>
+                    <polygon points="38,38 50,38 50,88" fill="#6bc0ff"/>
+                    <polygon points="62,38 50,38 50,88" fill="#bce7ff"/>
+                </svg>
+                <div class="gift-label">Diamond</div>
+            </div>
+
+            <div class="gift-card" onclick="clickWrongGift()">
+                <svg class="gift-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="22" y="24" width="56" height="36" rx="4" fill="#a1a1a5"/>
+                    <rect x="24" y="26" width="52" height="31" fill="#000"/>
+                    <circle cx="50" cy="40" r="6" stroke="#d63384" stroke-width="1.5" fill="none" opacity="0.7"/>
+                    <path d="M12,60 L88,60 L84,65 L16,65 Z" fill="#c3c3c7"/>
+                    <rect x="44" y="60" width="12" height="2" fill="#7a7a7e" rx="0.5"/>
+                    <rect x="30" y="58" width="40" height="2" fill="#444"/>
+                </svg>
+                <div class="gift-label">MacBook Pro</div>
+            </div>
+
+            <div class="gift-card special-tenth" onclick="clickCorrectGift()">
+                <p style="margin: 0; font-weight: 600; color: #d63384; font-size: calc(0.9rem + 0.15vw); line-height: 1.4;">
+                    "මට ලැබුන ලොකුම තෑග්ග ඔයා අයේ මොන තෑගිද" ❤️
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div id="final-screen" class="container hidden">
+        <h2 style="font-size: 2.3rem; margin-bottom: 5px;">Happy Birthday! 🎂</h2>
+        <p style="font-weight: 600; color: var(--btn-bg); margin-bottom: 25px;">You made the absolute right choices! 😉❤️</p>
+        <div class="final-msg">
+            මගේ රත්තරන් පැටියට සුබම සුබ උපන්දිනයක් වේවා! ❤️<br><br>
+            මාව ඉවසගෙන, මගේ මෝඩ විහිලු වලට හිනාවෙලා (සහ මට හැමදාම බැන බැන) මගේ ලඟින්ම ඉන්නවට ගොඩක් ස්තූතියි. ඔයා තමයි මගේ ජීවිතේට ලැබුණු ලස්සනම, වටිනාම වගේම මට ඉන්න ලොකුම වස්තුව!<br><br>
+            හැමදාම ඔය ලස්සන හිනාව මේ වගේම තියාගෙන සතුටින් ඉන්න. මම ඔයාට හැමදාටම මුළු හදවතින්ම ගොඩක් ආදරෙයි! 😘
+        </div>
+        
+        <div class="reward-timeline-container">
+            <h3 style="font-family:'Poppins', sans-serif; font-size:1rem; font-weight:600; margin:0 0 5px 0; color:var(--accent-color);">Your Birthday Rewards Timeline 🗓️</h3>
+            <p style="font-size:0.75rem; margin:0; opacity:0.7;">තෑගි මත ක්ලික් කර විස්තර බලන්න...</p>
+            
+            <div class="reward-grid">
+                <div class="reward-card" onclick="clickFlowerBouquet()">
+                    <svg class="reward-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <radialGradient id="flowerGlow" cx="50%" cy="40%" r="50%">
+            <stop offset="0%" stop-color="#fff5f6"/>
+            <stop offset="100%" stop-color="#ffffff"/>
+        </radialGradient>
+        <linearGradient id="roseRed" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff4d6d"/>
+            <stop offset="100%" stop-color="#ba1240"/>
+        </linearGradient>
+        <linearGradient id="paperWrap" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#fff0f2"/>
+            <stop offset="100%" stop-color="#e2b2bb"/>
+        </linearGradient>
+    </defs>
+    
+    <circle cx="50" cy="50" r="46" fill="url(#flowerGlow)"/>
+
+    <path d="M42,50 L34,88 M50,45 L50,92 M58,48 L66,88" stroke="#2d5a27" stroke-width="3" stroke-linecap="round"/>
+    
+    <path d="M20,40 C22,20 78,20 80,40 L65,82 C56,86 44,86 35,82 Z" fill="url(#paperWrap)" stroke="#cc99a3" stroke-width="1.2"/>
+    
+    <path d="M26,38 Q35,30 44,38 Q33,46 26,38 Z" fill="#4f772d"/>
+    <path d="M74,38 Q65,30 56,38 Q67,46 74,38 Z" fill="#4f772d"/>
+    <path d="M50,22 Q40,14 36,25 Q45,30 50,22 Z" fill="#31572c"/>
+
+    <circle cx="35" cy="44" r="10" fill="url(#roseRed)"/>
+    <path d="M30,42 C33,39 37,39 40,42" stroke="#ffffff" stroke-width="1" fill="none" opacity="0.5"/>
+    
+    <circle cx="65" cy="44" r="10" fill="url(#roseRed)"/>
+    <path d="M60,42 C63,39 67,39 70,42" stroke="#ffffff" stroke-width="1" fill="none" opacity="0.5"/>
+
+    <circle cx="50" cy="30" r="13" fill="url(#roseRed)"/>
+    <path d="M42,27 C45,21 55,21 58,27 C53,31 47,31 42,27 Z" fill="#ff758f" opacity="0.35"/>
+    <path d="M40,29 C44,34 56,34 60,29" stroke="#ffffff" stroke-width="1.2" fill="none" opacity="0.6"/>
+    <circle cx="50" cy="30" r="4" fill="#a4133c"/>
+    <path d="M48,29 C49,27 51,27 52,29" stroke="#ffffff" stroke-width="0.8" fill="none" opacity="0.7"/>
+
+    <circle cx="50" cy="46" r="9" fill="#ff758f"/>
+    <circle cx="50" cy="46" r="5" fill="#e63946"/>
+
+    <path d="M36,68 Q50,62 64,68 L56,80 Q50,74 44,80 Z" fill="#d63384"/>
+    <circle cx="50" cy="68" r="4" fill="#ffffff"/>
+    <path d="M48,70 L40,84 L46,82 Z" fill="#b02a6b"/>
+    <path d="M52,70 L60,84 L54,82 Z" fill="#b02a6b"/>
+</svg>
+                    <div class="reward-title">Flower Bouquet</div>
+                </div>
+
+                <div class="reward-card locked" onclick="clickLockedGift()">
+                    <svg class="reward-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25" y="40" width="50" height="45" rx="6" fill="#e2e2e7"/>
+                        <rect x="22" y="32" width="56" height="10" rx="2" fill="#d1d1d6"/>
+                        <rect x="42" y="52" width="16" height="14" rx="2" fill="#8e8e93"/>
+                        <path d="M45,52 L45,46 C45,42 55,42 55,46 L55,52" stroke="#8e8e93" stroke-width="2.5" fill="none"/>
+                    </svg>
+                    <div class="reward-title">Locked Gift</div>
+                </div>
+
+                <div class="reward-card locked" onclick="clickLockedGift()">
+                    <svg class="reward-img" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25" y="40" width="50" height="45" rx="6" fill="#e2e2e7"/>
+                        <rect x="22" y="32" width="56" height="10" rx="2" fill="#d1d1d6"/>
+                        <rect x="42" y="52" width="16" height="14" rx="2" fill="#8e8e93"/>
+                        <path d="M45,52 L45,46 C45,42 55,42 55,46 L55,52" stroke="#8e8e93" stroke-width="2.5" fill="none"/>
+                    </svg>
+                    <div class="reward-title">Locked Gift</div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <p style="font-size: 0.75rem; opacity: 0.5; margin-top: 20px;">Designed with absolute chaos & love by your developer.</p>
+    </div>
+
+    <script>
+        const emojis = ['😂', '❤️', '🙄', '🤫', '💸', '🤡'];
+        function createEmoji() {
+            const container = document.getElementById('emoji-container');
+            if(!container) return;
+            const particle = document.createElement('div');
+            particle.classList.add('emoji-particle');
+            particle.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+            particle.style.left = Math.random() * 95 + 'vw';
+            particle.style.animationDuration = Math.random() * 3 + 4 + 's';
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), 7000);
+        }
+        setInterval(createEmoji, 700);
+
+        const quizData = [
+            {
+                q: "අපි දෙන්නා මොකක් හරි ප්‍රශ්නයකට රණ්ඩු වුනහම, වැරැද්ද කාගෙ වුනත් අන්තිමට සමාව ඉල්ලන්න වෙන්නේ කාටද?",
+                options: ["ඔයාට", "මට", "වැරැද්ද ඔයාගෙ වුනත්, මම සොරි කියනවා!!"],
+                correct: "වැරැද්ද ඔයාගෙ වුනත්, මම සොරි කියනවා!!"
+            },
+            {
+                q: "වැඩිපුරම දේවල් අමතක වෙන්නේ කාටද?",
+                options: ["ඔයාට", "මට"],
+                correct: "මට"
+            },
+            {
+                q: "ආදරේ වැඩිම කව්ද",
+                options: ["ඔයා", "මම"],
+                correct: "ඔයා"
+            },
+            {
+                q: "අපි දෙන්නාගෙන් වැඩිපුරම ලස්සන කව්ද",
+                options: ["ඔයා", "මම"],
+                correct: "ඔයා"
+            }
+        ];
+
+        let currentQuestion = 0;
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('quiz-screen').classList.add('hidden');
+        });
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput').value;
+            if (input === "20190919") {
+                fadeOutIn('password-screen', 'quiz-screen');
+                loadQuiz();
+            } else {
+                document.getElementById('error').classList.remove('hidden');
+            }
+        }
+
+        function loadQuiz() {
+            const data = quizData[currentQuestion];
+            document.getElementById('quiz-level-title').innerText = `LEVEL 0${currentQuestion + 1}`;
+            document.getElementById('question-text').innerText = data.q;
+            const optionsDiv = document.getElementById('options-container');
+            optionsDiv.innerHTML = '';
+
+            data.options.forEach((opt) => {
+                const btn = document.createElement('button');
+                btn.classList.add('quiz-option');
+                btn.innerText = opt;
+                btn.onclick = () => handleAnswer(opt, data.correct);
+                optionsDiv.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedOption, correctOption) {
+            if (selectedOption === correctOption) {
+                currentQuestion++;
+                if (currentQuestion < quizData.length) {
+                    loadQuiz();
+                } else {
+                    fadeOutIn('quiz-screen', 'gift-screen');
+                }
+            } else {
+                showAlert("මරිසි එපා හරි එක ඔබන්න මේක හදලා තියෙන්නෙ මට වාසියට 😑");
+            }
+        }
+
+        function clickWrongGift() {
+            showAlert("💸 හිස් පොකට් එකක් සහිත මුදල් පසුම්බියක්! (Empty Wallet) 💸\n\nඕවා ගන්න සල්ලි නෑ පැටියෝ... වෙන එකක් තෝරන්න! 😂🍿");
+        }
+
+        function clickCorrectGift() {
+            const overlay = document.getElementById('kiss-overlay');
+            overlay.classList.add('animate-kiss');
+            
+            setTimeout(() => {
+                fadeOutIn('gift-screen', 'final-screen');
+            }, 1000);
+
+            setTimeout(() => {
+                overlay.classList.remove('animate-kiss');
+            }, 2000);
+        }
+
+        // Timeline Trigger Handling Mechanics
+        function clickFlowerBouquet() {
+            showAlert("ම්ම්ම්ම් ඒක දැනටමත් හම්බුනානේ 🌹");
+        }
+
+        function clickLockedGift() {
+            showAlert("හා හා කලබල වෙන්න එපා ඒවා ඉස්සරහට හම්බෙයී. 😉🔒");
+        }
+
+        function showAlert(msg) {
+            document.getElementById('alert-text').innerText = msg;
+            document.getElementById('custom-alert').classList.remove('hidden');
+        }
+
+        function closeAlert() {
+            document.getElementById('custom-alert').classList.add('hidden');
+        }
+
+        function fadeOutIn(hideId, showId) {
+            const hideEl = document.getElementById(hideId);
+            const showEl = document.getElementById(showId);
+            
+            hideEl.style.opacity = '0';
+            setTimeout(() => {
+                hideEl.classList.add('hidden');
+                showEl.classList.remove('hidden');
+                setTimeout(() => {
+                    showEl.style.opacity = '1';
+                }, 50);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
